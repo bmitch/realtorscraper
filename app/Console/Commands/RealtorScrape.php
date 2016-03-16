@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Services\RealtorService;
+use App\Generators\ListingPageGenerator as Generator;
 
 class RealtorScrape extends Command
 {
@@ -21,7 +22,6 @@ class RealtorScrape extends Command
      */
     protected $description = 'Scrapes Realtor Listings';
 
-
     /**
      * The RealtorService class instance..
      *
@@ -30,13 +30,21 @@ class RealtorScrape extends Command
     protected $realtorService;
 
     /**
+     * The ListingsPageGenerator class instance..
+     *
+     * @var App\Services\ListingsPageGenerator
+     */
+    protected $generator;
+
+    /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct(RealtorService $realtorService)
+    public function __construct(RealtorService $realtorService, Generator $generator)
     {
         $this->realtorService = $realtorService;
+        $this->generator = $generator;
         parent::__construct();
     }
 
@@ -51,11 +59,11 @@ class RealtorScrape extends Command
         // a name of a curl call to make
         // ("could have multiple for different sorts etc..")
         // store these in an .env file or config?
-        $listings = $this->realtorService->getListings();
+        $listingsJson = $this->realtorService->getListings();
 
         // Take listings and turn into HTML
-        // $listingsHtml = ListingsPageGenerator->generateHtml($listings)
-
+        $result = $this->generator->generateHtml($listingsJson);
+        dd($result);
         // Send emails to list of users in config
         // EmailClass->sendEmail(['email@addresses.com'], $listingsHtml);
     }
