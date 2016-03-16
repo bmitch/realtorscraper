@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use App\Services\RealtorService;
 
 class RealtorScrape extends Command
 {
@@ -20,13 +21,22 @@ class RealtorScrape extends Command
      */
     protected $description = 'Scrapes Realtor Listings';
 
+
+    /**
+     * The RealtorService class instance..
+     *
+     * @var App\Services\RealtorService
+     */
+    protected $realtorService;
+
     /**
      * Create a new command instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(RealtorService $realtorService)
     {
+        $this->realtorService = $realtorService;
         parent::__construct();
     }
 
@@ -41,7 +51,7 @@ class RealtorScrape extends Command
         // a name of a curl call to make
         // ("could have multiple for different sorts etc..")
         // store these in an .env file or config?
-        // $listings = RealtorService->getListings();
+        $listings = $this->realtorService->getListings();
 
         // Take listings and turn into HTML
         // $listingsHtml = ListingsPageGenerator->generateHtml($listings)
