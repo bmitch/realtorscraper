@@ -62,14 +62,16 @@ class RealtorScrape extends Command
      * Execute the console command.
      *
      * @return mixed
+     * @todo  Need to fix this
      */
     public function handle()
     {
+        $this->info('Obtaining Listings...');
         $listingsJson = $this->realtorService->getListings();
-
+        $this->info('Listings obtained...');
         $data = $this->generator->formatData($listingsJson);
-
+        $this->info('Sending emails...');
         $this->mailer->mail($data);
-
+        $this->info('Emails sent!');
     }
 }
