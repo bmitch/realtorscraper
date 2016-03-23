@@ -12,6 +12,8 @@
 			<div>
 				<h4>{{ $listing['price'] }} <br/> {{ $listing['address'] }}</h4>
 				<img src ='{{ $listing['image'] }}'></img>
+				<img src ='{{ getGoogleMapUrl($listing['address']) }}'></img>
+				
 				<p>{{ $listing['description'] }}</p>
 				<p>{{ $listing['url'] }}</p>
 				<p>Last updated: {{ $listing['lastUpdated'] }}</p>
