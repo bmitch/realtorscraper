@@ -67,18 +67,26 @@ class RealtorScrape extends Command
      */
     public function handle()
     {
-        $search = $this->getSearchArgument();
-        $this->info('Obtaining Listings...');
+        $searches = $this->getSearchArgument();
+
+        foreach ($searches as $index => $search) {
+            $this->performScrape($search);
+        }
+    }
+
+    private function getSearchArgument()
+    {
+        return explode(',', strtoupper($this->argument('search')));
+    }
+
+    private function performScrape($search)
+    {
+        $this->info("Obtaining Listings for {$search}");
         $listingsJson = $this->realtorService->getListings($search);
         $this->info('Listings obtained...');
         $data = $this->generator->formatData($listingsJson);
         $this->info('Sending emails...');
         $this->mailer->mail($data);
         $this->info('Emails sent!');
-    }
-
-    private function getSearchArgument()
-    {
-       return strtoupper($this->argument('search'));
     }
 }
