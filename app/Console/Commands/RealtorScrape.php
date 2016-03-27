@@ -15,7 +15,8 @@ class RealtorScrape extends Command
      *
      * @var string
      */
-    protected $signature = 'realtor:scrape';
+    protected $signature = 'realtor:scrape
+                            {search : The saved search to perform}';
 
     /**
      * The console command description.
@@ -66,12 +67,18 @@ class RealtorScrape extends Command
      */
     public function handle()
     {
+        $search = $this->getSearchArgument();
         $this->info('Obtaining Listings...');
-        $listingsJson = $this->realtorService->getListings();
+        $listingsJson = $this->realtorService->getListings($search);
         $this->info('Listings obtained...');
         $data = $this->generator->formatData($listingsJson);
         $this->info('Sending emails...');
         $this->mailer->mail($data);
         $this->info('Emails sent!');
+    }
+
+    private function getSearchArgument()
+    {
+       return strtoupper($this->argument('search'));
     }
 }

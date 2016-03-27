@@ -11,15 +11,22 @@ class RealtorService
         $this->client = $client;
     }
 
-    public function getListings($config = 'default')
+    public function getListings($search)
     {
-        $url = env('REALTOR_URL');
+        $data = $this->getSearchPostData($search);
+        return (string) $this->client->request('POST', env('REALTOR_URL'), $data)->getBody();
+    }
+
+    private function getSearchPostData($search)
+    {
         $data = [
-            'body' => env('REALTOR_BODY'),
+            'body' => env("REALTOR_SEARCH_{$search}"),
         ];
 
-        $request = $this->client->request('POST', $url, $data);
+        if ($data['body'] == null) {
+            throw new \exception("Saved search not found.");
+        }
 
-        return (string) $request->getBody();
+        return $data;
     }
 }
